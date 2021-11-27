@@ -7,9 +7,8 @@ Pak Dengklek has no information on the direction of the roads, but Pak Chanek ha
 Pak Dengklek is allowed to ask Pak Chanek at most $40\,000$ questions.
 For each question in turn, Pak Dengklek chooses a pair of towns and Pak Chanek tells him the direction of the road connecting those two towns.
 
-Pak Dengklek wants to return the index of a town with at most one outgoing road.
-If there is more than one such town, Pak Dengklek can return the index of any such town.
-If there is no such town, return $-1$.
+Pak Dengklek wants to know a town number with at most one outgoing road, or report if there is no such town.
+If there is more than one such town, Pak Dengklek only needs to know any of such town numbers.
 
 
 ## Implementation Details
@@ -21,7 +20,7 @@ void find_town(int N)
 ```
 
 * $N$: the number of towns in Indonesia.
-* This procedure should return the index of a town with at most one outgoing road, or $-1$ if there is no such town.
+* This procedure should return any town number with at most one outgoing road, or $-1$ if there is no such town.
 
 The above procedure can make calls to the following procedure:
 
@@ -29,7 +28,7 @@ The above procedure can make calls to the following procedure:
 bool check_road(int A, int B)
 ```
 
-* $A, B$: indices of a pair of towns to be asked to Pak Chanek.
+* $A, B$: a pair of town numbers to be asked to Pak Chanek.
 * $A$ and $B$ must be **distinct** integers from $0$ to $N - 1$ inclusive.
 * The procedure returns `true` if there is a road going from town $A$ to town $B$ and returns `false` if there is a road going from town $B$ to town $A$.
 * This procedure can be called at most $40\,000$ times.
@@ -49,10 +48,11 @@ The procedure `find_town` is called in the following way:
 find_town(3)
 ```
 
-This procedure may call `check_road(0, 1)`, which (in this scenario) returns `true`.
-
-At this point, there is sufficient information to conclude that town $1$ has at most one outgoing road.
+This procedure may call `check_road(0, 1)`, which (in this scenario) returns `true`. At this point, there is sufficient information to conclude that town $1$ has at most one outgoing road.
 Therefore, the procedure may return $1$.
+
+Additionally, this procedure may call `check_road(2, 1)`, which (in this scenario) returns `false`. At this point, there is sufficient information to conclude that town $2$ has at most one outgoing road.
+Therefore, the procedure may also return $2$.
 
 ### Example 2
 
@@ -92,19 +92,19 @@ Then, your score for this subtask is calculated according to the following table
 | Questions                 | Score                                                                |
 | ------------------------- | -------------------------------------------------------------------- |
 | $20\,000 < Q \le 40\,000$ | $20$                                                                 |
-| $8\,000 < Q \le 20\,000$  | $\left \lfloor 90 - 70 \sqrt{\frac{Q - 8000}{12000}} \right \rfloor$ |
-| $Q \le 8\,000$            | $90$                                                                 |
+| $8000 < Q \le 20\,000$    | $\left \lfloor 90 - 70 \sqrt{\frac{Q - 8000}{12000}} \right \rfloor$ |
+| $Q \le 8000$              | $90$                                                                 |
 
 ## Sample Grader
 
-The sample grader reads a 2D array $R$ of integers representing the roads in Indonesia.
-For all $0 \le i, j \le N - 1$ ($i \ne j$), $R[i][j] = 1$ means there is a road going from town $i$ to town $j$ and $R[i][j] = 0$ means there is a road going from town $j$ to town $i$.
-For all $0 \le i \le N - 1$, $R[i][i]$ should be $0$.
+The sample grader reads an array $R$ of $N$ strings with $N$ characters representing the roads in Indonesia.
+For all $0 \le i, j \le N - 1$ ($i \ne j$), $R[i][j]$ is `1` if there is a road going from town $i$ to town $j$ and $R[i][j]$ is `0` if there is a road going from town $j$ to town $i$.
+For all $0 \le i \le N - 1$, $R[i][i]$ should be `0`.
 
 The sample grader reads input in the following format:
 
 * line $1$: $N$
-* line $2 + i$ ($0 \le i \le N - 1$): $R[i][0] \; R[i][1] \; \ldots \; R[i][N - 1]$
+* line $2 + i$ ($0 \le i \le N - 1$): $R[i]$
 
 The output of sample grader is in the following format:
 
