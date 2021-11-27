@@ -32,3 +32,8 @@ logs/
 
 # Ignore generated gen/data
 */gen/data
+
+# Ignore generated latex files
+*/statement/render/*.aux
+*/statement/render/*.log
+*/statement/render/*.pdf
