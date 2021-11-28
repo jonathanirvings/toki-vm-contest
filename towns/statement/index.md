@@ -16,7 +16,7 @@ If there is more than one such town, Pak Dengklek only needs to know any of such
 You should implement the following procedure:
 
 ```
-void find_town(int N)
+int find_town(int N)
 ```
 
 * $N$: the number of towns in Indonesia.
