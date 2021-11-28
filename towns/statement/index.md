@@ -89,11 +89,11 @@ In subtask 2 you can obtain a partial score.
 Let $Q$ be the maximum number of calls to the procedure `check_road` among all test cases in this subtask.
 Then, your score for this subtask is calculated according to the following table:
 
-| Questions                 | Score                                                                |
-| ------------------------- | -------------------------------------------------------------------- |
-| $20\,000 < Q \le 40\,000$ | $20$                                                                 |
-| $8000 < Q \le 20\,000$    | $\left \lfloor 90 - 70 \sqrt{\frac{Q - 8000}{12000}} \right \rfloor$ |
-| $Q \le 8000$              | $90$                                                                 |
+| Questions                 | Score                                   |
+| ------------------------- | --------------------------------------- |
+| $20\,000 < Q \le 40\,000$ | $20$                                    |
+| $8000 < Q \le 20\,000$    | $90 - 70 \sqrt{\frac{Q - 8000}{12000}}$ |
+| $Q \le 8000$              | $90$                                    |
 
 ## Sample Grader
 
