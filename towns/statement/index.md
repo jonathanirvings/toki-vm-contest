@@ -106,7 +106,14 @@ The sample grader reads input in the following format:
 * line $1$: $N$
 * line $2 + i$ ($0 \le i \le N - 1$): $R[i]$
 
-The output of sample grader is in the following format:
+If your program does either of the following violation, then the output of the sample grader is `Wrong Answer: MSG`, where the value of `MSG` depends on the violation.
+
+* Call `check_road` more than $40\,000$ times.
+In this case, the value of `MSG` is `too many questions`.
+* Call `check_road` with $A$ and $B$ are not distinct integers from $0$ to $N - 1$ inclusive.
+In this case, the value of `MSG` is `invalid parameters`.
+
+Otherwise, the output of the sample grader is in the following format:
 
 * line $1$: the return value of `find_town`.
 * line $2$: the number of calls to `check_road`.
