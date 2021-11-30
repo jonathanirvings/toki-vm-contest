@@ -16,12 +16,11 @@ class Strategy {
 
 class ManualStrategy : public Strategy {
  public:
-  ManualStrategy() {
-    scanf("%d", &N);
+  ManualStrategy(int N) : N(N) {
     R.resize(N);
     for (int i = 0; i < N; ++i) {
       char buffer[N + 1];
-      scanf("%s", buffer);
+      assert(1 == scanf("%s", buffer));
       R[i] = buffer;
     }
   }
@@ -72,16 +71,15 @@ int main(int argc, char *argv[]) {
   FILE *fout = openFile(argv[2], "a");
   FILE *fin = openFile(argv[1], "r");
 
-  std::unique_ptr<Strategy> strategy;
-  char buffer[100];
-  assert(1 == scanf("%s", buffer));
-
   int N;
   int subtask;
   assert(2 == scanf("%d %d", &N, &subtask));
 
+  std::unique_ptr<Strategy> strategy;
+  char buffer[100];
+  assert(1 == scanf("%s", buffer));
   if (std::string(buffer) == "manual") {
-    strategy.reset(new ManualStrategy());
+    strategy.reset(new ManualStrategy(N));
   } else {
     assert(false);
   }
@@ -125,6 +123,10 @@ int main(int argc, char *argv[]) {
       int answer;
       if (fscanf(fin, "%d", &answer) != 1) {
         quit(_sv, "Invalid answer format.");
+      }
+
+      if (answer < -1 || answer >= N) {
+        quit(_wa, "Wrong answer.");
       }
 
       if (strategy->is_correct(answer)) {
