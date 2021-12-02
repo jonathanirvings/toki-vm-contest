@@ -4,13 +4,91 @@
 #include <csignal>
 #include <cstdio>
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "strategy/manual.hpp"
-#include "strategy/must_sure.hpp"
-#include "strategy/strategy.hpp"
+class Strategy {
+ public:
+  virtual ~Strategy() = default;
+  virtual bool check_road(int A, int B) = 0;
+  virtual bool is_correct(int town) = 0;
+};
+
+class ManualStrategy : public Strategy {
+ public:
+  ManualStrategy(int N) {
+    R.resize(N);
+    for (int i = 0; i < N; ++i) {
+      char buffer[N + 1];
+      assert(1 == scanf("%s", buffer));
+      R[i] = buffer;
+    }
+  }
+
+  bool check_road(int A, int B) override {
+    return R[A][B] == '1';
+  }
+
+  bool is_correct(int town) override {
+    if (town == -1) {
+      return std::all_of(R.begin(), R.end(), [] (std::string s) {
+        return std::count(s.begin(), s.end(), '1') > 1;
+      });
+    } else {
+      return std::count(R[town].begin(), R[town].end(), '1') <= 1;
+    }
+  }
+
+ private:
+  std::vector<std::string> R;
+};
+
+class MustSureStrategy : public Strategy {
+ public:
+  MustSureStrategy(int N) : N(N) {
+    R.resize(N);
+    unknown.resize(N, N - 1);
+    outdeg.resize(N);
+    queried.resize(N, std::vector<bool>(N, false));
+    for (int i = 0; i < N; ++i) {
+      char buffer[N + 1];
+      assert(1 == scanf("%s", buffer));
+      R[i] = buffer;
+    }
+  }
+
+  bool check_road(int A, int B) override {
+    if (!queried[A][B]) {
+      queried[A][B] = queried[B][A] = true;
+      --unknown[A];
+      --unknown[B];
+      ++outdeg[R[A][B] == '1' ? A : B];
+    }
+    return R[A][B] == '1';
+  }
+
+  bool is_correct(int town) override {
+    if (town == -1) {
+      for (int i = 0; i < N; ++i) {
+        if (outdeg[i] <= 1) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return outdeg[town] + unknown[town] <= 1;
+    }
+  }
+
+ private:
+  int N;
+  std::vector<std::string> R;
+  std::vector<std::vector<bool>> queried;
+  std::vector<int> unknown;
+  std::vector<int> outdeg;
+};
 
 inline FILE* openFile(const char* name, const char* mode) {
   FILE* file = fopen(name, mode);
