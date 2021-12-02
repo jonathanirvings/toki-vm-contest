@@ -8,41 +8,9 @@
 #include <string>
 #include <vector>
 
-class Strategy {
- public:
-  virtual ~Strategy() = default;
-  virtual bool check_road(int A, int B) = 0;
-  virtual bool is_correct(int town) = 0;
-};
-
-class ManualStrategy : public Strategy {
- public:
-  ManualStrategy(int N) {
-    R.resize(N);
-    for (int i = 0; i < N; ++i) {
-      char buffer[N + 1];
-      assert(1 == scanf("%s", buffer));
-      R[i] = buffer;
-    }
-  }
-
-  bool check_road(int A, int B) override {
-    return R[A][B] == '1';
-  }
-
-  bool is_correct(int town) override {
-    if (town == -1) {
-      return all_of(R.begin(), R.end(), [] (std::string s) {
-        return count(s.begin(), s.end(), '1') > 1;
-      });
-    } else {
-      return count(R[town].begin(), R[town].end(), '1') <= 1;
-    }
-  }
-
- private:
-  std::vector<std::string> R;
-};
+#include "strategy/manual.hpp"
+#include "strategy/must_sure.hpp"
+#include "strategy/strategy.hpp"
 
 inline FILE* openFile(const char* name, const char* mode) {
   FILE* file = fopen(name, mode);
@@ -80,6 +48,8 @@ int main(int argc, char *argv[]) {
   assert(1 == scanf("%s", buffer));
   if (std::string(buffer) == "manual") {
     strategy.reset(new ManualStrategy(N));
+  } else if (std::string(buffer) == "must-sure") {
+    strategy.reset(new MustSureStrategy(N));
   } else {
     assert(false);
   }
