@@ -4,6 +4,7 @@
 #include <csignal>
 #include <cstdio>
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
@@ -32,16 +33,61 @@ class ManualStrategy : public Strategy {
 
   bool is_correct(int town) override {
     if (town == -1) {
-      return all_of(R.begin(), R.end(), [] (std::string s) {
-        return count(s.begin(), s.end(), '1') > 1;
+      return std::all_of(R.begin(), R.end(), [] (std::string s) {
+        return std::count(s.begin(), s.end(), '1') > 1;
       });
     } else {
-      return count(R[town].begin(), R[town].end(), '1') <= 1;
+      return std::count(R[town].begin(), R[town].end(), '1') <= 1;
     }
   }
 
  private:
   std::vector<std::string> R;
+};
+
+class MustSureStrategy : public Strategy {
+ public:
+  MustSureStrategy(int N) : N(N) {
+    R.resize(N);
+    unknown.resize(N, N - 1);
+    outdeg.resize(N);
+    queried.resize(N, std::vector<bool>(N, false));
+    for (int i = 0; i < N; ++i) {
+      char buffer[N + 1];
+      assert(1 == scanf("%s", buffer));
+      R[i] = buffer;
+    }
+  }
+
+  bool check_road(int A, int B) override {
+    if (!queried[A][B]) {
+      queried[A][B] = queried[B][A] = true;
+      --unknown[A];
+      --unknown[B];
+      ++outdeg[R[A][B] == '1' ? A : B];
+    }
+    return R[A][B] == '1';
+  }
+
+  bool is_correct(int town) override {
+    if (town == -1) {
+      for (int i = 0; i < N; ++i) {
+        if (outdeg[i] <= 1) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return outdeg[town] + unknown[town] <= 1;
+    }
+  }
+
+ private:
+  int N;
+  std::vector<std::string> R;
+  std::vector<std::vector<bool>> queried;
+  std::vector<int> unknown;
+  std::vector<int> outdeg;
 };
 
 inline FILE* openFile(const char* name, const char* mode) {
@@ -80,6 +126,8 @@ int main(int argc, char *argv[]) {
   assert(1 == scanf("%s", buffer));
   if (std::string(buffer) == "manual") {
     strategy.reset(new ManualStrategy(N));
+  } else if (std::string(buffer) == "must-sure") {
+    strategy.reset(new MustSureStrategy(N));
   } else {
     assert(false);
   }
