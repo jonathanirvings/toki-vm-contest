@@ -13,7 +13,9 @@ bool check_road(int A, int B) {
   fflush(stdout);
 
   int road;
-  assert(1 == scanf("%d", &road));
+  if (scanf("%d", &road) != 1) {
+    exit(0);
+  }
   return road == 1;
 }
 
