@@ -1,5 +1,8 @@
 {
-    "solution.cpp": {
-      "verdict": "model_solution"
-    }
+  "solution.cpp": {
+    "verdict": "model_solution"
+  },
+  "prabowo-6n.cpp": {
+    "verdict": "partially_correct"
+  }
 }
