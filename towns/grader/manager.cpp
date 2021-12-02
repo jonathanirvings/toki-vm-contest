@@ -10,13 +10,14 @@
 
 class Strategy {
  public:
+  virtual ~Strategy() = default;
   virtual bool check_road(int A, int B) = 0;
   virtual bool is_correct(int town) = 0;
 };
 
 class ManualStrategy : public Strategy {
  public:
-  ManualStrategy(int N) : N(N) {
+  ManualStrategy(int N) {
     R.resize(N);
     for (int i = 0; i < N; ++i) {
       char buffer[N + 1];
@@ -40,7 +41,6 @@ class ManualStrategy : public Strategy {
   }
 
  private:
-  int N;
   std::vector<std::string> R;
 };
 
