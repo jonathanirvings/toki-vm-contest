@@ -3,7 +3,7 @@ def manual(testcase):
 
 
 def include(include):
-  print(f"@include {include.name or include.__name__[len(TESTSET_PREFIX):]}")
+  print(f"@include {include.name}")
 
 
 def indexify_testcases(gen_func):
