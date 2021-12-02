@@ -23,7 +23,7 @@ class MustSureStrategy : public Strategy {
       queried[A][B] = queried[B][A] = true;
       --unknown[A];
       --unknown[B];
-      --outdeg[R[A][B] == '1' ? A : B];
+      ++outdeg[R[A][B] == '1' ? A : B];
     }
     return R[A][B] == '1';
   }
@@ -31,7 +31,7 @@ class MustSureStrategy : public Strategy {
   bool is_correct(int town) override {
     if (town == -1) {
       for (int i = 0; i < N; ++i) {
-        if (outdeg[town] <= 1) {
+        if (outdeg[i] <= 1) {
           return false;
         }
       }

@@ -2,10 +2,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void bZero(int maxA) {
-  printf("%d 0\n", rnd.next(0, maxA));
-}
-
 void randomR(int N) {
   vector<string> R(N, string(N, '0'));
   for (int i = 0; i < N; ++i) {
