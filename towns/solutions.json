@@ -3,6 +3,9 @@
     "verdict": "model_solution"
   },
   "prabowo-6n.cpp": {
-    "verdict": "partially_correct"
+    "verdict": "correct",
+    "except": {
+      "full": "partially_correct"
+    }
   }
 }
