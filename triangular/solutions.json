@@ -1,0 +1,21 @@
+{
+  "solution.cpp": {
+    "verdict": "model_solution"
+  },
+  "jonathanirvings_no_hardcode.cpp": {
+    "verdict": "model_solution",
+    "except": {
+      "subtask4": "time_limit"
+    }
+  },
+  "jonathanirvings_rnd_greedy.cpp": {
+    "verdict": "partially_correct",
+    "except": {
+      "subtask1": "correct",
+      "subtask2": "correct"
+    }
+  },
+  "jonathanirvings_rnd.cpp": {
+    "verdict": "partially_correct"
+  }
+}
