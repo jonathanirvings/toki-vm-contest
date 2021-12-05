@@ -3,8 +3,8 @@
 A number is **triangular** if it can be represented by the sum of a prefix of the sequence of positive integers.
 The first five triangular numbers are $1, 3, 6, 10, 15$.
 
-You are given an integer $N$ and would like to construct a sequence $A[0], A[1], \ldots A[N - 1]$ such that each integer from $1$ to $N$ (inclusive) appears exactly once.
-We would like to arrange this sequence around a circle, so that $A[0]$ and $A[N - 1]$ are adjancent and for each $0 \le i < N - 1$, $A[i]$ and $A[i + 1]$ are also adjacent.
+You are given an integer $N$ and would like to construct a sequence $a[0], a[1], \ldots a[N - 1]$ such that each integer from $1$ to $N$ (inclusive) appears exactly once.
+We would like to arrange this sequence around a circle, so that $a[0]$ and $a[N - 1]$ are adjancent and for each $0 \le i < N - 1$, $a[i]$ and $a[i + 1]$ are also adjacent.
 The **value** of the sequence is the number of adjacent elements whose sum is a triangular number.
 
 For example, let $N = 4$.
@@ -33,7 +33,7 @@ Each input file is in the following format:
 
 Each output file must be in the following format:
 
-* line $1$: $A[0] \; A[1] \; \ldots \; A[N - 1]$
+* line $1$: $a[0] \; a[1] \; \ldots \; a[N - 1]$
 
 ## Example
 
