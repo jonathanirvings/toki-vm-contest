@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-constexpr int kNumTries = 100000;
+constexpr int kMaxIterations = 100000;
+constexpr double kMaxRuntimeSecs = 0.9;
 constexpr int kRandomSeed = 477444;
 
 int main() {
@@ -18,8 +19,13 @@ int main() {
   vector<int> order(N);
   iota(order.begin(), order.end(), 1);
   pair<int, vector<int>> answer = make_pair(0, vector<int>({}));
-  for (int tries = 0; tries < kNumTries; ++tries) {
-    random_shuffle(order.begin(), order.end());
+  mt19937 rng(kRandomSeed);
+  clock_t tStart = clock();
+  for (int tries = 0;
+       tries < kMaxIterations &&
+           clock() - tStart < kMaxRuntimeSecs * CLOCKS_PER_SEC;
+       ++tries) {
+    shuffle(order.begin(), order.end(), rng);
     vector<int> A = {order[0]};
     int value = 0;
     

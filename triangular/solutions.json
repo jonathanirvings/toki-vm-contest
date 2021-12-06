@@ -3,7 +3,7 @@
     "verdict": "model_solution"
   },
   "jonathanirvings_no_hardcode.cpp": {
-    "verdict": "model_solution",
+    "verdict": "correct",
     "except": {
       "subtask4": "time_limit"
     }
