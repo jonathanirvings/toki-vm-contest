@@ -89,8 +89,6 @@ class ManualStrategy : public Strategy {
 
  private:
   std::vector<std::string> manualR;
-  std::vector<int> unknown;
-  std::vector<int> outdeg;
 };
 
 class MustSureStrategy : public Strategy {
@@ -170,6 +168,7 @@ class MaintainCycleStrategy : public Strategy {
   MaintainCycleStrategy(int N, bool deterministic=false)
       : Strategy(N), deterministic(deterministic) {
     adj.resize(N);
+    cyclePart.resize(N);
   }
 
   bool check_road_impl(int A, int B) override {
