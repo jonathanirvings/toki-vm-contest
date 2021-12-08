@@ -11,83 +11,301 @@
 
 class Strategy {
  public:
+  Strategy(int N)
+      : N(N), R(N, std::vector<int>(N, -1)), outdeg(N), unknown(N, N - 1) {}
+
+  bool check_road(int A, int B) {
+    if (R[A][B] != -1) {
+      return R[A][B];
+    }
+    R[A][B] = check_road_impl(A, B);
+    R[B][A] = 1 - R[A][B];
+    ++outdeg[R[A][B] ? A : B];
+    --unknown[A];
+    --unknown[B];
+    return R[A][B];
+  }
+
+  bool is_correct(int town) {
+    if (town == -1) {
+      for (int i = 0; i < N; ++i) {
+        if (outdeg[i] + unknown[i] <= 1) {
+          return false;
+        }
+      }
+      if (all_of(outdeg.begin(), outdeg.end(), [] (int o) {
+        return o > 1;
+      })) {
+        return true;
+      }
+      return is_correct_impl(town);
+    }
+    if (outdeg[town] + unknown[town] <= 1) {
+      return true;
+    }
+    if (outdeg[town] > 1) {
+      return false;
+    }
+    return is_correct_impl(town);
+  }
+
   virtual ~Strategy() = default;
-  virtual bool check_road(int A, int B) = 0;
-  virtual bool is_correct(int town) = 0;
+
+ protected:
+  int N;
+  std::vector<std::vector<int>> R;
+  std::vector<int> outdeg;
+  std::vector<int> unknown;
+
+ private:
+  virtual bool check_road_impl(int A, int B) = 0;
+  virtual bool is_correct_impl(int town) = 0;
 };
 
 class ManualStrategy : public Strategy {
  public:
-  ManualStrategy(int N) {
-    R.resize(N);
+  ManualStrategy(int N) : Strategy(N) {
+    manualR.resize(N);
     for (int i = 0; i < N; ++i) {
       char buffer[N + 1];
       assert(1 == scanf("%s", buffer));
-      R[i] = buffer;
+      manualR[i] = buffer;
     }
   }
 
-  bool check_road(int A, int B) override {
-    return R[A][B] == '1';
+  bool check_road_impl(int A, int B) override {
+    return manualR[A][B] == '1';
   }
 
-  bool is_correct(int town) override {
+  bool is_correct_impl(int town) override {
     if (town == -1) {
-      return std::all_of(R.begin(), R.end(), [] (std::string s) {
+      return std::all_of(manualR.begin(), manualR.end(), [] (std::string s) {
         return std::count(s.begin(), s.end(), '1') > 1;
       });
     } else {
-      return std::count(R[town].begin(), R[town].end(), '1') <= 1;
+      return std::count(manualR[town].begin(), manualR[town].end(), '1') <= 1;
     }
   }
 
  private:
-  std::vector<std::string> R;
+  std::vector<std::string> manualR;
+  std::vector<int> unknown;
+  std::vector<int> outdeg;
 };
 
 class MustSureStrategy : public Strategy {
  public:
-  MustSureStrategy(int N) : N(N) {
-    R.resize(N);
-    unknown.resize(N, N - 1);
-    outdeg.resize(N);
-    queried.resize(N, std::vector<bool>(N, false));
+  MustSureStrategy(int N) : Strategy(N) {
+    manualR.resize(N);
     for (int i = 0; i < N; ++i) {
       char buffer[N + 1];
       assert(1 == scanf("%s", buffer));
-      R[i] = buffer;
+      manualR[i] = buffer;
     }
   }
 
-  bool check_road(int A, int B) override {
-    if (!queried[A][B]) {
-      queried[A][B] = queried[B][A] = true;
-      --unknown[A];
-      --unknown[B];
-      ++outdeg[R[A][B] == '1' ? A : B];
-    }
-    return R[A][B] == '1';
+  bool check_road_impl(int A, int B) override {
+    return manualR[A][B] == '1';
   }
 
-  bool is_correct(int town) override {
-    if (town == -1) {
-      for (int i = 0; i < N; ++i) {
-        if (outdeg[i] <= 1) {
-          return false;
-        }
-      }
-      return true;
-    } else {
-      return outdeg[town] + unknown[town] <= 1;
-    }
+  bool is_correct_impl(int) override {
+    return false;
   }
 
  private:
-  int N;
-  std::vector<std::string> R;
-  std::vector<std::vector<bool>> queried;
-  std::vector<int> unknown;
-  std::vector<int> outdeg;
+  std::vector<std::string> manualR;
+};
+
+class GreedyOutdegStrategy : public Strategy {
+ public:
+  GreedyOutdegStrategy(int N, bool greedyMax)
+     : Strategy(N), greedyMax(greedyMax) {}
+
+  bool check_road_impl(int A, int B) override {
+    return (greedyMax != (outdeg[A] < outdeg[B]));
+  }
+
+  bool is_correct_impl(int) override {
+    return false;
+  }
+
+ private:
+  bool greedyMax;
+};
+
+class NearFoundStrategy : public Strategy {
+ public:
+  NearFoundStrategy(int N) : Strategy(N) {}
+
+  bool check_road_impl(int A, int B) override {
+    if (outdeg[A] <= 1 && outdeg[B] <= 1) {
+      return true;
+    }
+
+    if (outdeg[A] <= 1 && outdeg[B] > 1) {
+      if (outdeg[A] + unknown[A] - 1 <= 1) {
+        return true;
+      }
+      return false;
+    }
+
+    if (outdeg[A] > 1 && outdeg[B] <= 1) {
+      if (outdeg[B] + unknown[B] - 1 <= 1) {
+        return false;
+      }
+      return true;
+    }
+
+    return true;
+  }
+
+  bool is_correct_impl(int) override {
+    // Answer should always be -1
+    return false;
+  }
+};
+
+class MaintainCycleStrategy : public Strategy {
+ public:
+  MaintainCycleStrategy(int N, bool deterministic=false)
+      : Strategy(N), deterministic(deterministic) {
+    adj.resize(N);
+  }
+
+  bool check_road_impl(int A, int B) override {
+    if (unknown[B] - 1 + outdeg[B] <= 1) {
+      addEdge(B, A);
+      // Cycle may be removed
+      rebuildCycle();
+      return false;
+    }
+
+    if (unknown[A] - 1 + outdeg[A] <= 1) {
+      addEdge(A, B);
+      // Cycle may be removed
+      rebuildCycle();
+      return true;
+    }
+
+    if (outdeg[A] == 0 && outdeg[B] == 0) {
+      return randomAddEdge(A, B);
+    }
+
+    if (outdeg[A] == 0 && outdeg[B] == 1) {
+      addEdge(A, B);
+      // A new cycle may be formed
+      rebuildCycle();
+      return true;
+    }
+
+    if (outdeg[A] == 1 && outdeg[B] == 0) {
+      addEdge(B, A);
+      // A new cycle may be formed
+      rebuildCycle();
+      return false;
+    }
+
+    if (outdeg[A] == 1 && outdeg[B] == 1) {
+      if (cyclePart[A] && cyclePart[B]) {
+        bool ret = randomAddEdge(A, B);
+        // Cycle becomes smaller
+        rebuildCycle();
+        return ret;
+      }
+
+      if (cyclePart[A] && !cyclePart[B]) {
+        addEdge(B, A);
+        return false;
+      }
+
+      if (!cyclePart[A] && cyclePart[B]) {
+        addEdge(A, B);
+        return true;
+      }
+
+      if (!cyclePart[A] && !cyclePart[B]) {
+        return randomAddEdge(A, B);
+      }
+
+      assert(false);
+    }
+
+    if (outdeg[A] > 1 && outdeg[B] <= 1) {
+      addEdge(A, B);
+      return true;
+    }
+
+    if (outdeg[A] <= 1 && outdeg[B] > 1) {
+      addEdge(B, A);
+      return false;
+    }
+
+    assert(outdeg[A] > 1 && outdeg[B] > 1);
+    return randomAddEdge(A, B);
+  }
+
+  bool is_correct_impl(int) override {
+    // if your solution was <= 4N, then `town` should be -1
+    // otherwise, your solution must be at least 5N
+    return false;
+  }
+
+ private:
+  bool deterministic;
+  std::vector<std::vector<int>> adj;
+  std::vector<bool> cyclePart;
+
+  void addEdge(int u, int v) {
+    adj[u].push_back(v);
+  }
+
+  bool randomAddEdge(int u, int v) {
+    if (deterministic || rnd.next(2)) {
+      addEdge(u, v);
+      return true;
+    }
+    addEdge(v, u);
+    return false;
+  }
+
+  // O(N)
+  void rebuildCycle() {
+    cyclePart.assign(N, false);
+    std::vector<bool> vis(N, false);
+    std::vector<bool> visTour(N, false);
+    for (int i = 0; i < N; ++i) {
+      if (vis[i] || adj[i].size() != 1) continue;
+
+      int u = i;
+      std::vector<int> tour;
+      while (adj[u].size() == 1) {
+        visTour[u] = true;
+        tour.push_back(u);
+        u = adj[u][0];
+
+        if (vis[u]) {
+          break;
+        }
+
+        if (visTour[u]) {
+          // Found cycle
+          while (tour.back() != u) {
+            cyclePart[tour.back()] = true;
+            vis[tour.back()] = true;
+            visTour[tour.back()] = false;
+            tour.pop_back();
+          }
+          cyclePart[u] = true;
+          break;
+        }
+      }
+
+      for (int u : tour) {
+        vis[u] = true;
+        visTour[u] = false;
+      }
+    }
+  }
 };
 
 inline FILE* openFile(const char* name, const char* mode) {
@@ -128,6 +346,16 @@ int main(int argc, char *argv[]) {
     strategy.reset(new ManualStrategy(N));
   } else if (std::string(buffer) == "must-sure") {
     strategy.reset(new MustSureStrategy(N));
+  } else if (std::string(buffer) == "greedy-outdeg-min") {
+    strategy.reset(new GreedyOutdegStrategy(N, false));
+  } else if (std::string(buffer) == "greedy-outdeg-max") {
+    strategy.reset(new GreedyOutdegStrategy(N, true));
+  } else if (std::string(buffer) == "near-found") {
+    strategy.reset(new NearFoundStrategy(N));
+  } else if (std::string(buffer) == "maintain-cycle") {
+    strategy.reset(new MaintainCycleStrategy(N));
+  } else if (std::string(buffer) == "maintain-cycle-deterministic") {
+    strategy.reset(new MaintainCycleStrategy(N, true));
   } else {
     assert(false);
   }
