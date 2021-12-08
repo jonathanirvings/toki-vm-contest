@@ -181,7 +181,6 @@ class MaintainCycleStrategy : public Strategy {
     }
 
     if (unknown[A] - 1 + outdeg[A] <= 1) {
-      assert(unknown[A] + outdeg[A] == 2);
       addEdge(A, B);
       // Cycle may be removed
       rebuildCycle();
