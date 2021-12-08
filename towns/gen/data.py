@@ -22,7 +22,7 @@ def gen_manual(minN, maxN, subtask_index, testcase_index=0):
 
 @indexify_testcases
 def gen_must_sure(minN, maxN, subtask_index, graph_type, *args, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} must-sure {graph_type} {''.join(str(arg) + ' ' for arg in args)}{testcase_index}")
+  print(f"gen {minN} {maxN} {subtask_index} must-sure {graph_type} {' '.join(map(str, list(args) + ['']))}{testcase_index}")
 
 
 @indexify_testcases
