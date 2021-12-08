@@ -2,6 +2,30 @@
   "solution.cpp": {
     "verdict": "model_solution"
   },
+  "jonathanirvings_bf.cpp": {
+    "verdict": "correct",
+    "except": {
+      "full": "incorrect"
+    }
+  },
+  "jonathanirvings_nlgn.cpp": {
+    "verdict": "correct",
+    "except": {
+      "full": "partially_correct"
+    }
+  },
+  "jonathanirvings_8n.cpp": {
+    "verdict": "correct",
+    "except": {
+      "full": "partially_correct"
+    }
+  },
+  "jonathanirvings_5n.cpp": {
+    "verdict": "correct",
+    "except": {
+      "full": "partially_correct"
+    }
+  },
   "prabowo-6n.cpp": {
     "verdict": "correct",
     "except": {
