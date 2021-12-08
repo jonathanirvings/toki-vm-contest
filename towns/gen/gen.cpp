@@ -26,7 +26,7 @@ vector<vector<int>> randomR(int N) {
   return R;
 }
 
-vector<vector<int>> hasNoOutgoingR(int N, int pivot=-1) {
+vector<vector<int>> hasKOutgoingR(int N, int K, int pivot=-1) {
   if (pivot == -1) {
     pivot = rnd.next(N);
   }
@@ -38,23 +38,23 @@ vector<vector<int>> hasNoOutgoingR(int N, int pivot=-1) {
       R[pivot][i] = 0;
     }
   }
-  return R;
-}
 
-vector<vector<int>> hasOneOutgoingR(int N, int pivot=-1) {
-  if (pivot == -1) {
-    pivot = rnd.next(N);
+  vector<int> outgoings(N - 1);
+  for (int i = 0; i < pivot; ++i) {
+    outgoings[i] = i;
   }
-  auto R = hasNoOutgoingR(N, pivot);
-  int u = -1;
-  do {
-    u = rnd.next(N);
-  } while (u == pivot);
+  for (int i = pivot + 1; i < N; ++i) {
+    outgoings[i - 1] = i;
+  }
+  shuffle(outgoings.begin(), outgoings.end());
 
-  if (u < pivot) {
-    R[u][pivot] ^= 1;
-  } else {
-    R[pivot][u] ^= 1;
+  outgoings.resize(K);
+  for (int u : outgoings) {
+    if (u < pivot) {
+      R[u][pivot] ^= 1;
+    } else {
+      R[pivot][u] ^= 1;
+    }
   }
   return R;
 }
@@ -93,10 +93,9 @@ int main(int argc, char* argv[]) {
     const char* graph = argv[5];
     if (strcmp(graph, "random") == 0) {
       printR(randomR(N));
-    } else if (strcmp(graph, "has-no-outgoing") == 0) {
-      printR(hasNoOutgoingR(N));
-    } else if (strcmp(graph, "has-one-outgoing") == 0) {
-      printR(hasOneOutgoingR(N));
+    } else if (strcmp(graph, "has-k-outgoing") == 0) {
+      int K = atoi(argv[6]);
+      printR(hasKOutgoingR(N, K));
     } else if (strcmp(graph, "dag") == 0) {
       printR(dagR(N));
     }

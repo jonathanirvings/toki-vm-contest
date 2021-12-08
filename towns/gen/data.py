@@ -21,8 +21,8 @@ def gen_manual(minN, maxN, subtask_index, testcase_index=0):
 
 
 @indexify_testcases
-def gen_must_sure(minN, maxN, subtask_index, graph_type, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} must-sure {graph_type} {testcase_index}")
+def gen_must_sure(minN, maxN, subtask_index, graph_type, *args, testcase_index=0):
+  print(f"gen {minN} {maxN} {subtask_index} must-sure {graph_type} {''.join(str(arg) + ' ' for arg in args)}{testcase_index}")
 
 
 @indexify_testcases
@@ -78,8 +78,9 @@ class SubtaskSmallN(Subtask):
     include(SubtaskSamples)
     gen_manual(self.minN, self.maxN, self.subtask_index)
     gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'random')
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-no-outgoing')
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-one-outgoing')
+    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 0)
+    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 1)
+    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 2)
     gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'dag')
     gen_greedy_outdeg_max(self.maxN, self.maxN, self.subtask_index)
     gen_greedy_outdeg_min(self.maxN, self.maxN, self.subtask_index)
@@ -98,8 +99,9 @@ class SubtaskFull(Subtask):
     super().__init__()
     gen_manual(self.minN, self.maxN, self.subtask_index)
     gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'random')
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-no-outgoing')
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-one-outgoing')
+    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 0)
+    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 1)
+    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 2)
     gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'dag')
     gen_greedy_outdeg_max(self.maxN, self.maxN, self.subtask_index)
     gen_greedy_outdeg_min(self.maxN, self.maxN, self.subtask_index)
