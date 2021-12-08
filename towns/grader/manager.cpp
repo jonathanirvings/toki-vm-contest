@@ -50,14 +50,16 @@ class Strategy {
   }
 
   virtual ~Strategy() = default;
-  virtual bool check_road_impl(int A, int B) = 0;
-  virtual bool is_correct_impl(int town) = 0;
 
  protected:
   int N;
   std::vector<std::vector<int>> R;
   std::vector<int> outdeg;
   std::vector<int> unknown;
+
+ private:
+  virtual bool check_road_impl(int A, int B) = 0;
+  virtual bool is_correct_impl(int town) = 0;
 };
 
 class ManualStrategy : public Strategy {
