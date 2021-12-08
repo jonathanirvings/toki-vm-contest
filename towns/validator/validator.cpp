@@ -1,5 +1,6 @@
 #include "testlib.h"
 
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -30,6 +31,13 @@ int main(int, char *argv[]) {
       }
     }
   }
+
+  std::vector<std::string> strategies = {
+    "manual", "must-sure", "greedy-outdeg-min", "greedy-outdeg-max",
+    "near-found", "maintain-cycle", "maintain-cycle-deterministic",
+  };
+  ensuref(std::find(strategies.begin(), strategies.end(), strategy) != strategies.end(),
+          "Strategy not found");
   inf.readEof();
   return 0;
 }
