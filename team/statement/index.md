@@ -22,7 +22,7 @@ int maximum_teams(int N, int K, int[] L);
 
 * $N$: the number of programmers.
 * $K$: the skill level limit of the registered teams.
-* $L$: an array of length $L$, where $L[i]$ is the skill level of the programmer $i$.
+* $L$: an array of length $N$, where $L[i]$ is the skill level of the programmer $i$.
 * This procedure should return the maximum number of teams you can register.
 * This procedure is called exactly once.
 
