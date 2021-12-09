@@ -14,7 +14,7 @@ For other tasks:
 * You are free to implement other procedures.
 * When testing your programs with the sample grader, your input should match the format and constraints from the task statement, otherwise, unspecified behaviors may occur.
 * In sample grader inputs, every two consecutive tokens on a line are separated by a single space, unless another format is explicitly specified.
-* When you test your code on your local machine, we recommend you to use scripts in the attachment package. The grading system will use `-std=gnu++17` option to compile, but you may remove or replace it if your local compiler does not support it.
+* When you test your code on your local machine, we recommend you to use scripts in the attachment packages. Please note that we use the `-std=gnu++17` compiler option.
 
 # Convention
 
