@@ -1,4 +1,3 @@
-public cpp/compile.bat
 public cpp/compile.sh
 public cpp/PROBLEM_NAME_PLACE_HOLDER.cpp
 grader cpp/PROBLEM_NAME_PLACE_HOLDER.h
