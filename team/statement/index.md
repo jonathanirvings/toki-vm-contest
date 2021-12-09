@@ -4,7 +4,7 @@ ICPC (Inter-Collegiate Programming Contest) is a programming contest for univers
 ICPC is participated by teams of three programmers.
 
 Your university is registering several teams to participate in ICPC this year.
-There are $N$ eligible programmers numbered from $0$ to $N$.
+There are $N$ eligible programmers numbered from $0$ to $N - 1$.
 The programmer $i$ has a skill level of $L[i]$.
 The skill level of a team consisting of programmer $i$, $j$, and $k$ is $\min(L[i], L[j], L[k]) + \max(L[i], L[j], L[k])$.
 
