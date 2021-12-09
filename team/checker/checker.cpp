@@ -3,7 +3,7 @@
 #include <string>
 
 int main(int argc, char * argv[]) {
-  registerChecker("aplusb", argc, argv);
+  registerChecker("team", argc, argv);
 
   std::string output_secret = "ini-adalah-keluaran-rahasia";
 

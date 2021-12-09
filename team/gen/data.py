@@ -85,7 +85,7 @@ class SubtaskExponential(Subtask):
     gen_random_simple(8, 10000000, 1, 20000000)
 
     for _ in range(6):
-      gen_random(1, 8, 1, maxK / 2, 0, 1, 1, 2, 3, 0)
+      gen_random(1, 8, 1, maxK // 2, 0, 1, 1, 2, 3, 0)
 
     gen_ranges(10, [(1, 4, 1), (5, 9, 2)])
 
