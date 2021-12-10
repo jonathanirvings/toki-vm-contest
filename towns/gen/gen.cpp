@@ -80,6 +80,7 @@ vector<vector<int>> cycleR(int N, int cycles) {
 
   vector<int> order(N);
   iota(order.begin(), order.end(), 0);
+  shuffle(order.begin(), order.end());
 
   for (int i = 1; i <= cycles; ++i) {
     for (int j = 0; j < N; ++j) {

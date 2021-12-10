@@ -16,13 +16,6 @@ def indexify_testcases(gen_func):
 
 
 @indexify_testcases
-def gen_manual(minN, maxN, subtask_index, testcase_index=0):
-  print(
-      f"gen {minN} {maxN} {subtask_index} manual"
-      f" {testcase_index}")
-
-
-@indexify_testcases
 def gen_must_sure(
     minN, maxN, subtask_index, graph_type, *args, testcase_index=0):
   print(
