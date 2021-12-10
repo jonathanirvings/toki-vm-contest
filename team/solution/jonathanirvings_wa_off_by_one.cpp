@@ -9,7 +9,7 @@ int maximum_teams(int N, int K, std::vector<int> L) {
   int hi = N - 1;
   int lo = 0;
   while (lo + 1 < hi) {
-    while (lo + 1 < hi && L[lo] + L[hi] <= K) {
+    while (lo + 1 < hi && L[lo] + L[hi] < K) {
       ++lo;
     }
     if (lo + 1 < hi) {
