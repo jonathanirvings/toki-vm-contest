@@ -75,6 +75,26 @@ vector<vector<int>> dagR(int N) {
   return R;
 }
 
+vector<vector<int>> cycleR(int N, int cycles) {
+  auto R = randomR(N);
+
+  vector<int> order(N);
+  iota(order.begin(), order.end(), 0);
+
+  for (int i = 1; i <= cycles; ++i) {
+    for (int j = 0; j < N; ++j) {
+      int u = order[j];
+      int v = order[(j + i) % N];
+      if (u < v) {
+        R[u][v] = 1;
+      } else {
+        R[v][u] = 1;
+      }
+    }
+  }
+  return R;
+}
+
 int main(int argc, char* argv[]) {
   registerGen(argc, argv, 0);
 
@@ -98,6 +118,9 @@ int main(int argc, char* argv[]) {
       printR(hasKOutgoingR(N, K));
     } else if (strcmp(graph, "dag") == 0) {
       printR(dagR(N));
+    } else if (strcmp(graph, "cycle") == 0) {
+      int cycles = atoi(argv[6]);
+      printR(cycleR(N, cycles));
     }
   }
 }

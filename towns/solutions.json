@@ -2,6 +2,12 @@
   "solution.cpp": {
     "verdict": "model_solution"
   },
+  "jonathanirvings_bf_all.cpp": {
+    "verdict": "correct",
+    "except": {
+      "full": "incorrect"
+    }
+  },
   "jonathanirvings_bf.cpp": {
     "verdict": "correct",
     "except": {
@@ -21,6 +27,12 @@
     }
   },
   "jonathanirvings_5n.cpp": {
+    "verdict": "correct",
+    "except": {
+      "full": "partially_correct"
+    }
+  },
+  "jonathanirvings_5n_rnd.cpp": {
     "verdict": "correct",
     "except": {
       "full": "partially_correct"
