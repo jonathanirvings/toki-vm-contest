@@ -35,8 +35,10 @@ int main(int, char *argv[]) {
   std::vector<std::string> strategies = {
     "manual", "must-sure", "greedy-outdeg-min", "greedy-outdeg-max",
     "near-found", "maintain-cycle", "maintain-cycle-deterministic",
+    "delay-elimination", "maintain-adjacent-nodes"
   };
-  ensuref(std::find(strategies.begin(), strategies.end(), strategy) != strategies.end(),
+  ensuref(std::find(strategies.begin(),
+                    strategies.end(), strategy) != strategies.end(),
           "Strategy not found");
   inf.readEof();
   return 0;

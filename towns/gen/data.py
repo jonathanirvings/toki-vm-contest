@@ -16,38 +16,61 @@ def indexify_testcases(gen_func):
 
 
 @indexify_testcases
-def gen_manual(minN, maxN, subtask_index, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} manual {testcase_index}")
-
-
-@indexify_testcases
-def gen_must_sure(minN, maxN, subtask_index, graph_type, *args, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} must-sure {graph_type} {' '.join(map(str, list(args) + ['']))}{testcase_index}")
+def gen_must_sure(
+    minN, maxN, subtask_index, graph_type, *args, testcase_index=0):
+  print(
+      f"gen {minN} {maxN} {subtask_index} must-sure"
+      f" {graph_type} {' '.join(map(str, list(args) + ['']))}{testcase_index}")
 
 
 @indexify_testcases
 def gen_greedy_outdeg_min(minN, maxN, subtask_index, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} greedy-outdeg-min {testcase_index}")
+  print(
+      f"gen {minN} {maxN} {subtask_index} greedy-outdeg-min"
+      f" {testcase_index}")
 
 
 @indexify_testcases
 def gen_greedy_outdeg_max(minN, maxN, subtask_index, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} greedy-outdeg-max {testcase_index}")
+  print(
+      f"gen {minN} {maxN} {subtask_index} greedy-outdeg-max"
+      f" {testcase_index}")
 
 
 @indexify_testcases
 def gen_near_found(minN, maxN, subtask_index, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} near-found {testcase_index}")
+  print(
+      f"gen {minN} {maxN} {subtask_index} near-found"
+      f" {testcase_index}")
 
 
 @indexify_testcases
 def gen_maintain_cycle(minN, maxN, subtask_index, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} maintain-cycle {testcase_index}")
+  print(
+      f"gen {minN} {maxN} {subtask_index} maintain-cycle"
+      f" {testcase_index}")
 
 
 @indexify_testcases
-def gen_maintain_cycle_deterministic(minN, maxN, subtask_index, testcase_index=0):
-  print(f"gen {minN} {maxN} {subtask_index} maintain-cycle-deterministic {testcase_index}")
+def gen_maintain_cycle_deterministic(
+    minN, maxN, subtask_index, testcase_index=0):
+  print(
+      f"gen {minN} {maxN} {subtask_index} maintain-cycle-deterministic"
+      f" {testcase_index}")
+
+
+@indexify_testcases
+def gen_delay_elimination(minN, maxN, subtask_index, testcase_index=0):
+  print(
+      f"gen {minN} {maxN} {subtask_index} delay-elimination"
+      f" {testcase_index}")
+
+
+@indexify_testcases
+def gen_maintain_adjacent_nodes(minN, maxN, subtask_index, testcase_index=0):
+  print(
+      f"gen {minN} {maxN} {subtask_index} maintain-adjacent-nodes"
+      f" {testcase_index}")
 
 
 class Subtask():
@@ -67,6 +90,25 @@ class SubtaskSamples(Subtask):
     manual("sample-2")
 
 
+def gen_common_cases(minN, maxN, subtask_index):
+  for _ in range(2):
+    gen_must_sure(maxN - 5, maxN, subtask_index, 'random')
+    gen_must_sure(maxN - 5, maxN, subtask_index, 'cycle', 1)
+    gen_must_sure(maxN - 5, maxN, subtask_index, 'cycle', 2)
+    gen_must_sure(maxN - 5, maxN, subtask_index, 'has-k-outgoing', 0)
+    gen_must_sure(maxN - 5, maxN, subtask_index, 'has-k-outgoing', 1)
+    gen_must_sure(maxN - 5, maxN, subtask_index, 'has-k-outgoing', 2)
+    gen_must_sure(maxN - 5, maxN, subtask_index, 'dag')
+    gen_maintain_cycle(maxN, maxN, subtask_index)
+    gen_delay_elimination(maxN, maxN, subtask_index)
+    gen_maintain_adjacent_nodes(maxN, maxN, subtask_index)
+
+  gen_greedy_outdeg_max(maxN, maxN, subtask_index)
+  gen_greedy_outdeg_min(maxN, maxN, subtask_index)
+  gen_near_found(maxN, maxN, subtask_index)
+  gen_maintain_cycle_deterministic(maxN, maxN, subtask_index)
+
+
 class SubtaskSmallN(Subtask):
   name = "smallN"
   subtask_index = 1
@@ -76,17 +118,11 @@ class SubtaskSmallN(Subtask):
   def __init__(self):
     super().__init__()
     include(SubtaskSamples)
-    gen_manual(self.minN, self.maxN, self.subtask_index)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'random')
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 0)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 1)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 2)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'dag')
-    gen_greedy_outdeg_max(self.maxN, self.maxN, self.subtask_index)
-    gen_greedy_outdeg_min(self.maxN, self.maxN, self.subtask_index)
-    gen_near_found(self.maxN, self.maxN, self.subtask_index)
-    gen_maintain_cycle(self.maxN, self.maxN, self.subtask_index)
-    gen_maintain_cycle_deterministic(self.maxN, self.maxN, self.subtask_index)
+    gen_must_sure(self.minN, self.minN, self.subtask_index, 'cycle', 1)
+    gen_must_sure(self.minN, self.minN, self.subtask_index, 'dag')
+    if self.minN <= 5:
+      gen_must_sure(5, 5, self.subtask_index, 'cycle', 2)
+    gen_common_cases(self.minN, self.maxN, self.subtask_index)
 
 
 class SubtaskFull(Subtask):
@@ -97,17 +133,7 @@ class SubtaskFull(Subtask):
 
   def __init__(self):
     super().__init__()
-    gen_manual(self.minN, self.maxN, self.subtask_index)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'random')
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 0)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 1)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'has-k-outgoing', 2)
-    gen_must_sure(self.maxN - 5, self.maxN, self.subtask_index, 'dag')
-    gen_greedy_outdeg_max(self.maxN, self.maxN, self.subtask_index)
-    gen_greedy_outdeg_min(self.maxN, self.maxN, self.subtask_index)
-    gen_near_found(self.maxN, self.maxN, self.subtask_index)
-    gen_maintain_cycle(self.maxN, self.maxN, self.subtask_index)
-    gen_maintain_cycle_deterministic(self.maxN, self.maxN, self.subtask_index)
+    gen_common_cases(self.minN, self.maxN, self.subtask_index)
 
 
 def main():

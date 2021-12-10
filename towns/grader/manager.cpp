@@ -12,7 +12,12 @@
 class Strategy {
  public:
   Strategy(int N)
-      : N(N), R(N, std::vector<int>(N, -1)), outdeg(N), unknown(N, N - 1) {}
+      : N(N), R(N, std::vector<int>(N, -1)),
+        outdeg(N), unknown(N, N - 1), nodesWithOutdeg(N) {
+    for (int i = 0; i < N; ++i) {
+      nodesWithOutdeg[0].insert(i);
+    }
+  }
 
   bool check_road(int A, int B) {
     if (R[A][B] != -1) {
@@ -20,7 +25,12 @@ class Strategy {
     }
     R[A][B] = check_road_impl(A, B);
     R[B][A] = 1 - R[A][B];
-    ++outdeg[R[A][B] ? A : B];
+
+    int outdegNode = R[A][B] ? A : B;
+    nodesWithOutdeg[outdeg[outdegNode]].erase(outdegNode);
+    ++outdeg[outdegNode];
+    nodesWithOutdeg[outdeg[outdegNode]].insert(outdegNode);
+
     --unknown[A];
     --unknown[B];
     return R[A][B];
@@ -56,6 +66,7 @@ class Strategy {
   std::vector<std::vector<int>> R;
   std::vector<int> outdeg;
   std::vector<int> unknown;
+  std::vector<std::set<int>> nodesWithOutdeg;
 
  private:
   virtual bool check_road_impl(int A, int B) = 0;
@@ -307,6 +318,125 @@ class MaintainCycleStrategy : public Strategy {
   }
 };
 
+class DelayEliminationStrategy : public Strategy {
+ public:
+  DelayEliminationStrategy(int N) : Strategy(N) {}
+
+  bool check_road_impl(int A, int B) override {
+    if (outdeg[A] > 1 && outdeg[B] > 1) {
+      return rnd.next(2);
+    }
+    if (outdeg[A] > 1) {
+      return true;
+    }
+    if (outdeg[B] > 1) {
+      return false;
+    }
+    if (outdeg[A] == 1 && outdeg[B] == 1) {
+      return rnd.next(2);
+    }
+    if (outdeg[A] == 1) {
+      return false;
+    }
+    if (outdeg[B] == 1) {
+      return true;
+    }
+    if (outdeg[A] + unknown[A] <= 2 && outdeg[B] + unknown[B] <= 2) {
+      return rnd.next(2);
+    }
+    if (outdeg[A] + unknown[A] <= 2) {
+      return true;
+    }
+    if (outdeg[B] + unknown[B] <= 2) {
+      return false;
+    }
+    return rnd.next(2);
+  }
+
+  bool is_correct_impl(int) override {
+    return false;
+  }
+};
+
+class MaintainAdjacentNodesStrategy : public Strategy {
+ public:
+  MaintainAdjacentNodesStrategy(int N) : Strategy(N), nextNode(N) {}
+
+  bool check_road_impl(int A, int B) override {
+    if (outdeg[A] + unknown[A] <= 2) {
+      nextNode[A] = B;
+      return true;
+    }
+    if (outdeg[B] + unknown[B] <= 2) {
+      nextNode[B] = A;
+      return false;
+    }
+
+    findRoot();
+    findAdjacentNode();
+    
+    if (A == adjacentNode.first || A == adjacentNode.second) {
+      nextNode[B] = A;
+      return false;
+    }
+    if (B == adjacentNode.first || B == adjacentNode.second) {
+      nextNode[A] = B;
+      return true;
+    }
+    if (A == root) {
+      nextNode[B] = A;
+      return false;
+    }
+    if (B == root) {
+      nextNode[A] = B;
+      return true;
+    }
+    if (rnd.next(2)) {
+      nextNode[B] = A;
+      return false;
+    } else {
+      nextNode[A] = B;
+      return true;
+    }
+  }
+
+  bool is_correct_impl(int) override {
+    return false;
+  }
+
+ private:
+  void findRoot() {
+    root = -1;
+    for (int i : nodesWithOutdeg[0]) {
+      if (root == -1 || unknown[i] > unknown[root]) {
+        root = i;
+      }
+    }
+  }
+
+  void findAdjacentNode() {
+    std::pair<int, int> prevAdjacentNode = adjacentNode;
+    adjacentNode = std::make_pair(-1, -1);
+    for (int i : nodesWithOutdeg[1]) {
+      int j = nextNode[i];
+      if (outdeg[j] == 1) {
+        if (adjacentNode == std::make_pair(-1, -1)
+            || unknown[i] + unknown[j] >
+               unknown[adjacentNode.first] + unknown[adjacentNode.second]) {
+          adjacentNode = std::make_pair(i, j);
+        }
+      }
+    }
+    if (adjacentNode == std::make_pair(-1, -1)) {
+      adjacentNode = prevAdjacentNode;
+    }
+  }
+
+  int root = 0;
+  std::vector<int> nextNode;
+  std::pair<int, int> adjacentNode = std::make_pair(-1, -1);
+};
+
 inline FILE* openFile(const char* name, const char* mode) {
   FILE* file = fopen(name, mode);
   if (!file) {
@@ -355,6 +485,10 @@ int main(int argc, char *argv[]) {
     strategy.reset(new MaintainCycleStrategy(N));
   } else if (std::string(buffer) == "maintain-cycle-deterministic") {
     strategy.reset(new MaintainCycleStrategy(N, true));
+  } else if (std::string(buffer) == "delay-elimination") {
+    strategy.reset(new DelayEliminationStrategy(N));
+  } else if (std::string(buffer) == "maintain-adjacent-nodes") {
+    strategy.reset(new MaintainAdjacentNodesStrategy(N));
   } else {
     assert(false);
   }
