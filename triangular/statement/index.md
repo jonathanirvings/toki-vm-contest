@@ -9,7 +9,7 @@ The **value** of the sequence is the number of adjacent elements whose sum is a 
 
 For example, let $N = 4$.
 The value of the sequence $\[3, 2, 1, 4\]$ is $1$ since $2 + 1$ is a triangular number but $3 + 2$, $1 + 4$, and $3 + 4$ are not triangular numbers.
-The value of the sequence $\[1, 2, 4, 3\]$ is $3$ since $1 + 2$ and $2 + 4$ are triangular numbers but $4 + 3$ and $1 + 3$ are not triangular numbers.
+The value of the sequence $\[1, 2, 4, 3\]$ is $2$ since $1 + 2$ and $2 + 4$ are triangular numbers but $4 + 3$ and $1 + 3$ are not triangular numbers.
 Note that the value of $N$ in this example does not satisfy the task constraint.
 
 You would like to maximize the value of your constructed sequence.
