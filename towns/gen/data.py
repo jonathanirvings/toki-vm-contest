@@ -73,6 +73,13 @@ def gen_maintain_adjacent_nodes(minN, maxN, subtask_index, testcase_index=0):
       f" {testcase_index}")
 
 
+@indexify_testcases
+def gen_maintain_three_nodes(minN, maxN, subtask_index, testcase_index=0):
+  print(
+      f"gen {minN} {maxN} {subtask_index} maintain-three-nodes"
+      f" {testcase_index}")
+
+
 class Subtask():
   name = None
 
@@ -102,6 +109,7 @@ def gen_common_cases(minN, maxN, subtask_index):
     gen_maintain_cycle(maxN, maxN, subtask_index)
     gen_delay_elimination(maxN, maxN, subtask_index)
     gen_maintain_adjacent_nodes(maxN, maxN, subtask_index)
+    gen_maintain_three_nodes(maxN, maxN, subtask_index)
 
   gen_greedy_outdeg_max(maxN, maxN, subtask_index)
   gen_greedy_outdeg_min(maxN, maxN, subtask_index)
