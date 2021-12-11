@@ -18,7 +18,7 @@ For other tasks:
 
 # Convention
 
-The task statements specify signatures using generic type names `void`, `int`, `int[]` (array), and `int[][]` (array of arrays).
+The task statements specify signatures using generic type names `void`, `int`, `bool`, and `int[]` (array).
 
 In C++, the graders use appropriate data types or implementations, as listed below
 
