@@ -35,7 +35,7 @@ int main(int, char *argv[]) {
   std::vector<std::string> strategies = {
     "manual", "must-sure", "greedy-outdeg-min", "greedy-outdeg-max",
     "near-found", "maintain-cycle", "maintain-cycle-deterministic",
-    "delay-elimination", "maintain-adjacent-nodes"
+    "delay-elimination", "maintain-adjacent-nodes", "maintain-three-nodes"
   };
   ensuref(std::find(strategies.begin(),
                     strategies.end(), strategy) != strategies.end(),

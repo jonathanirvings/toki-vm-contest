@@ -20,12 +20,19 @@ int find_town(int N) {
     iota(candidates.begin(), candidates.end(), 0);
     mt19937 rng;
     while (candidates.size() > 1) {
-      shuffle(candidates.begin(), candidates.end(), rng);
-      if (_check_road(candidates[0], candidates[1])) {
-        candidates.erase(candidates.begin() + 0);
-      } else {
-        candidates.erase(candidates.begin() + 1);
+      vector<int> new_candidates;
+      for (int i = 0; i < candidates.size(); i += 2) {
+        if (i + 1 == candidates.size()) {
+          new_candidates.push_back(candidates[i]);
+        } else {
+          if (_check_road(candidates[i], candidates[i + 1])) {
+            new_candidates.push_back(candidates[i + 1]);
+          } else {
+            new_candidates.push_back(candidates[i]);
+          }
+        }
       }
+      candidates = new_candidates;
     }
     no_out_candidate = candidates[0];
   }

@@ -375,19 +375,27 @@ class MaintainAdjacentNodesStrategy : public Strategy {
     findRoot();
     findAdjacentNode();
     
+    if (A == root) {
+      if (B == adjacentNode.second) {
+        nextNode[A] = B;
+        return true;
+      }
+      nextNode[B] = A;
+      return false;
+    }
+    if (B == root) {
+      if (A == adjacentNode.first) {
+        nextNode[B] = A;
+        return false;
+      }
+      nextNode[A] = B;
+      return true;
+    }
     if (A == adjacentNode.first || A == adjacentNode.second) {
       nextNode[B] = A;
       return false;
     }
     if (B == adjacentNode.first || B == adjacentNode.second) {
-      nextNode[A] = B;
-      return true;
-    }
-    if (A == root) {
-      nextNode[B] = A;
-      return false;
-    }
-    if (B == root) {
       nextNode[A] = B;
       return true;
     }
@@ -406,11 +414,15 @@ class MaintainAdjacentNodesStrategy : public Strategy {
 
  private:
   void findRoot() {
+    int prevRoot = root;
     root = -1;
     for (int i : nodesWithOutdeg[0]) {
       if (root == -1 || unknown[i] > unknown[root]) {
         root = i;
       }
+    }
+    if (root == -1) {
+      root = prevRoot;
     }
   }
 
@@ -419,6 +431,9 @@ class MaintainAdjacentNodesStrategy : public Strategy {
     adjacentNode = std::make_pair(-1, -1);
     for (int i : nodesWithOutdeg[1]) {
       int j = nextNode[i];
+      if (i == root || j == root) {
+        continue;
+      }
       if (outdeg[j] == 1) {
         if (adjacentNode == std::make_pair(-1, -1)
             || unknown[i] + unknown[j] >
@@ -435,6 +450,59 @@ class MaintainAdjacentNodesStrategy : public Strategy {
   int root = 0;
   std::vector<int> nextNode;
   std::pair<int, int> adjacentNode = std::make_pair(-1, -1);
+};
+
+class MaintainThreeNodesStrategy : public Strategy {
+ public:
+  MaintainThreeNodesStrategy(int N) : Strategy(N) {}
+
+  bool check_road_impl(int A, int B) override {
+    if (outdeg[A] + unknown[A] <= 2 && outdeg[B] + unknown[B] <= 2) {
+      return rnd.next(2);
+    }
+    if (outdeg[A] + unknown[A] <= 2) {
+      return true;
+    }
+    if (outdeg[B] + unknown[B] <= 2) {
+      return false;
+    }
+
+    updateNodes();
+
+    if (A == std::get<0>(nodes)) {
+      return B == std::get<1>(nodes);
+    }
+    if (A == std::get<1>(nodes)) {
+      return B == std::get<2>(nodes);
+    }
+    if (A == std::get<2>(nodes)) {
+      return B == std::get<0>(nodes);
+    }
+    if (B == std::get<0>(nodes)
+        || B == std::get<1>(nodes)
+        || B == std::get<2>(nodes)) {
+      return true;
+    }
+    return rnd.next(2);
+  }
+
+  bool is_correct_impl(int) override {
+    return false;
+  }
+
+ private:
+  void updateNodes() {
+    if (nodesWithOutdeg[0].size() >= 3) {
+      std::set<int>::iterator it = nodesWithOutdeg[0].begin();
+      std::get<0>(nodes) = *it;
+      ++it;
+      std::get<1>(nodes) = *it;
+      ++it;
+      std::get<2>(nodes) = *it;
+    }
+  }
+
+  std::tuple<int, int, int> nodes = std::make_tuple(0, 1, 2);
 };
 
 inline FILE* openFile(const char* name, const char* mode) {
@@ -489,6 +557,8 @@ int main(int argc, char *argv[]) {
     strategy.reset(new DelayEliminationStrategy(N));
   } else if (std::string(buffer) == "maintain-adjacent-nodes") {
     strategy.reset(new MaintainAdjacentNodesStrategy(N));
+  } else if (std::string(buffer) == "maintain-three-nodes") {
+    strategy.reset(new MaintainThreeNodesStrategy(N));
   } else {
     assert(false);
   }
