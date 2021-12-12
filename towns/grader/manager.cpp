@@ -375,19 +375,27 @@ class MaintainAdjacentNodesStrategy : public Strategy {
     findRoot();
     findAdjacentNode();
     
+    if (A == root) {
+      if (B == adjacentNode.second) {
+        nextNode[A] = B;
+        return true;
+      }
+      nextNode[B] = A;
+      return false;
+    }
+    if (B == root) {
+      if (A == adjacentNode.first) {
+        nextNode[B] = A;
+        return false;
+      }
+      nextNode[A] = B;
+      return true;
+    }
     if (A == adjacentNode.first || A == adjacentNode.second) {
       nextNode[B] = A;
       return false;
     }
     if (B == adjacentNode.first || B == adjacentNode.second) {
-      nextNode[A] = B;
-      return true;
-    }
-    if (A == root) {
-      nextNode[B] = A;
-      return false;
-    }
-    if (B == root) {
       nextNode[A] = B;
       return true;
     }
@@ -406,11 +414,15 @@ class MaintainAdjacentNodesStrategy : public Strategy {
 
  private:
   void findRoot() {
+    int prevRoot = root;
     root = -1;
     for (int i : nodesWithOutdeg[0]) {
       if (root == -1 || unknown[i] > unknown[root]) {
         root = i;
       }
+    }
+    if (root == -1) {
+      root = prevRoot;
     }
   }
 
@@ -419,6 +431,9 @@ class MaintainAdjacentNodesStrategy : public Strategy {
     adjacentNode = std::make_pair(-1, -1);
     for (int i : nodesWithOutdeg[1]) {
       int j = nextNode[i];
+      if (i == root || j == root) {
+        continue;
+      }
       if (outdeg[j] == 1) {
         if (adjacentNode == std::make_pair(-1, -1)
             || unknown[i] + unknown[j] >

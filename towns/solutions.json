@@ -32,13 +32,19 @@
       "full": "partially_correct"
     }
   },
-  "jonathanirvings_5n.cpp": {
+  "jonathanirvings_5n_deterministic.cpp": {
     "verdict": "correct",
     "except": {
       "full": "partially_correct"
     }
   },
   "jonathanirvings_5n_rnd.cpp": {
+    "verdict": "correct",
+    "except": {
+      "full": "partially_correct"
+    }
+  },
+  "jonathanirvings_5n_tournament.cpp": {
     "verdict": "correct",
     "except": {
       "full": "partially_correct"
