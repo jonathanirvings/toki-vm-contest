@@ -571,7 +571,7 @@ int main(int argc, char *argv[]) {
     {
       std::string in_secret = "Z";
       char secret[100];
-      if (fscanf(fin, "%s", secret) != 1 || std::string(secret) != in_secret) {
+      if (fscanf(fin, "%5s", secret) != 1 || std::string(secret) != in_secret) {
         quit(_sv, "Secret not found!");
       }
     }
