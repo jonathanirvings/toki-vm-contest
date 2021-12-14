@@ -89,7 +89,7 @@ vector<vector<int>> cycleR(int N, int cycles) {
       if (u < v) {
         R[u][v] = 1;
       } else {
-        R[v][u] = 1;
+        R[v][u] = 0;
       }
     }
   }

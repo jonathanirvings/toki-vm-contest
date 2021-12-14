@@ -493,12 +493,13 @@ class MaintainThreeNodesStrategy : public Strategy {
  private:
   void updateNodes() {
     if (nodesWithOutdeg[0].size() >= 3) {
-      std::set<int>::iterator it = nodesWithOutdeg[0].begin();
-      std::get<0>(nodes) = *it;
-      ++it;
-      std::get<1>(nodes) = *it;
-      ++it;
-      std::get<2>(nodes) = *it;
+      std::vector<int> nodesNoOutdeg(nodesWithOutdeg[0].begin(),
+                                     nodesWithOutdeg[0].end());
+      std::sort(nodesNoOutdeg.begin(), nodesNoOutdeg.end(), [&] (int u, int v) {
+        return unknown[u] > unknown[v];
+      });
+      nodes = std::make_tuple(
+          nodesNoOutdeg[0], nodesNoOutdeg[1], nodesNoOutdeg[2]);
     }
   }
 
