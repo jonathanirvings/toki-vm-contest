@@ -11,6 +11,7 @@
   "jonathanirvings_rnd_greedy.cpp": {
     "verdict": "partially_correct",
     "except": {
+      "samples": "correct",
       "subtask1": "correct",
       "subtask2": "correct"
     }
